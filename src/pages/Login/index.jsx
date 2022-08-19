@@ -15,7 +15,7 @@ export const Login = () => {
         password: ""
     });
     const [remember, setRemember] = useState(false);
-    const {setToken} = useContext(AuthContext);
+    const {handleSetToken} = useContext(AuthContext);
     const navigate = useNavigate();
 
 
@@ -23,7 +23,7 @@ export const Login = () => {
         e.preventDefault();
 
         API.post("/login", data).then(res => {
-            setToken(res.headers.token);
+            handleSetToken(res.headers.token);
 
             if(remember) {
                 localStorage.setItem("Authorization", res.headers.token);
