@@ -7,6 +7,8 @@ import Container from "react-bootstrap/Container";
 import 'bootstrap/dist/css/bootstrap.css';
 import { API } from "../../services/api";
 import { Link, useNavigate } from "react-router-dom";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
+import { InputGroup } from "react-bootstrap";
 
 export const Cadastro = () => {
     const [data, setData] = useState({
@@ -15,6 +17,8 @@ export const Cadastro = () => {
     });
     const [confirmPass, setConfirmPass] = useState("");
     const navigate = useNavigate();
+    const [hide, setHide] = useState(true);
+    const [hideConfirm, setHideConfirm] = useState(true);
 
 
     function handleSubmit(e) {
@@ -46,12 +50,22 @@ export const Cadastro = () => {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Senha</Form.Label>
-                                <Form.Control required type="password" placeholder="Digite a senha" onChange={(e) => setData({...data, password: e.target.value})}/>
+                                <InputGroup>
+                                    <Form.Control required type={hide ? "password" : "text"} placeholder="Digite a senha" onChange={(e) => setData({...data, password: e.target.value})}/>
+                                    <InputGroup.Text onClick={() => setHide(!hide)} style={{cursor: "pointer"}}>
+                                        {hide ? <FaEyeSlash /> : <FaEye />}
+                                    </InputGroup.Text>
+                                </InputGroup>
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Confirmar senha</Form.Label>
-                                <Form.Control required type="password" placeholder="Digite a senha novamente" onChange={(e) => setConfirmPass(e.target.value)}/>
+                                <InputGroup>
+                                    <Form.Control required type={hideConfirm ? "password" : "text"} placeholder="Digite a senha novamente" onChange={(e) => setConfirmPass(e.target.value)}/>
+                                    <InputGroup.Text onClick={() => setHideConfirm(!hideConfirm)} style={{cursor: "pointer"}}>
+                                        {hideConfirm ? <FaEyeSlash /> : <FaEye />}
+                                    </InputGroup.Text>
+                                </InputGroup>
                             </Form.Group>
                             
                             <Button variant="primary" type="submit">

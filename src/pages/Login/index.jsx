@@ -10,6 +10,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { InputGroup } from "react-bootstrap";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 export const Login = () => {
     const [data, setData] = useState({
@@ -19,6 +21,7 @@ export const Login = () => {
     const [remember, setRemember] = useState(false);
     const {handleSetToken} = useContext(AuthContext);
     const navigate = useNavigate();
+    const [hide, setHide] = useState(true);
     const notify = () => toast.error("Credenciais inválidas");
 
 
@@ -53,7 +56,12 @@ export const Login = () => {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Senha</Form.Label>
-                                <Form.Control required type="password" placeholder="Digite a senha" onChange={(e) => setData({...data, password: e.target.value})}/>
+                                <InputGroup>
+                                    <Form.Control required type={hide ? "password" : "text"} placeholder="Digite a senha" onChange={(e) => setData({...data, password: e.target.value})}/>
+                                    <InputGroup.Text onClick={() => setHide(!hide)} style={{cursor: "pointer"}}>
+                                        {hide ? <FaEyeSlash /> : <FaEye />}
+                                    </InputGroup.Text>
+                                </InputGroup>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Check type="checkbox" label="Lembrar de mim" onChange={(e) => setRemember(e.target.checked)}/>
