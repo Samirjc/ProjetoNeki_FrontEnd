@@ -13,6 +13,7 @@ export const Home = () => {
     const [selectedSkill, setSelectedSkill] = useState();
     const [userSkills, setUserSkills] = useState([]);
     const [search, setSearch] = useState("");
+    const [reload, setReload] = useState(false);
 
     const handleClose = () => {
         setShow(false);
@@ -25,7 +26,7 @@ export const Home = () => {
             getSkills();
             getUserSkills();
         }
-    }, [token, id])
+    }, [token, id, reload])
 
     function getSkills() {
         API.get("/skill", {headers: {Authorization: token}}).then(res => {
@@ -51,6 +52,7 @@ export const Home = () => {
     function handleSubmit() {
         API.post("/userSkill", {userId: id, skillId: selectedSkill, level: 1}, {headers: {Authorization: token}}).then(res => {
             handleClose();
+            setReload(!reload);
         }).catch(error => {
             console.log(error);
         });
@@ -73,7 +75,7 @@ export const Home = () => {
 
                 <CardGroup className='d-flex justify-content-center flex-wrap gap-3'>
                     {userSkills.filter(item => item.skill.name.toLowerCase().includes(search.toLowerCase())).map(item => (
-                        <SKillCard key={item.id} id={item.id} title={item.skill.name} imgUrl={item.skill.imageUrl} description={item.skill.description} level={item.knowledgeLevel}/>
+                        <SKillCard key={item.id} id={item.id} title={item.skill.name} imgUrl={item.skill.imageUrl} description={item.skill.description} level={item.knowledgeLevel} setReload={setReload} reload={reload}/>
                     ))}
                 </CardGroup>
 

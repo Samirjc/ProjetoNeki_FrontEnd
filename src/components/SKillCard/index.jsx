@@ -14,7 +14,9 @@ export const SKillCard = (props) => {
     const handleShow = () => setShow(true);
 
     function handleDelete() {
-        API.delete(`/userSkill/${props.id}`, {headers: {Authorization: token}}).then().catch(error => {
+        API.delete(`/userSkill/${props.id}`, {headers: {Authorization: token}}).then(res => {
+            props.setReload(!props.reload);
+        }).catch(error => {
             console.log(error);
         })
     }
@@ -22,6 +24,7 @@ export const SKillCard = (props) => {
     function handleSubmit() {
         API.put(`/userSkill/${props.id}`, update, {headers: {Authorization: token}}).then(res => {
             handleClose();
+            props.setReload(!props.reload);
         }).catch();
     }
 
