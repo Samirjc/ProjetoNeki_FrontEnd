@@ -19,20 +19,41 @@ export const Cadastro = () => {
     const navigate = useNavigate();
     const [hide, setHide] = useState(true);
     const [hideConfirm, setHideConfirm] = useState(true);
+    const [status, setStatus] = useState("");
 
 
     function handleSubmit(e) {
         e.preventDefault();
+        if(!validate()) return;
 
-        if(data.password === confirmPass) {
-            API.post("/user", data).then(res => {
-                navigate("/login");
-            }).catch(error => {
-                console.log("deu erro: " + error);
-            })
-        }else{
-            alert("algo errado");
+        API.post("/user", data).then(res => {
+            navigate("/login");
+        }).catch(error => {
+            if(error.response.headers.errormsg) {
+                setStatus(error.response.headers.errormsg);
+            }
+        })
+    }
+
+    function validate() {
+        if(!data.login) {
+            setStatus("Necessário preencher o login");
+            return false;
         }
+        if(!data.password) {
+            setStatus("Necessário preencher a senha");
+            return false;
+        }
+        if(!confirmPass) {
+            setStatus("Necessário confirmar a senha");
+            return false;
+        }
+        if(data.password !== confirmPass) {
+            setStatus("As senhas precisam ser iguais");
+            return false;
+        }
+
+        return true;
     }
 
     return (
@@ -43,15 +64,18 @@ export const Cadastro = () => {
                     </Col>
 
                     <Col md={4} className="shadow-lg p-5">
-                        <Form onSubmit={handleSubmit} novalidate>
+                        {status &&
+                            <div className="bg-danger text-center mb-2 p-2 rounded-3">{status}</div>
+                        }
+                        <Form onSubmit={handleSubmit}>
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>Login</Form.Label>
-                                <Form.Control required type="text" placeholder="Digite o login" onChange={(e) => setData({...data, login: e.target.value})}/>
+                                <Form.Control type="text" placeholder="Digite o login" onChange={(e) => setData({...data, login: e.target.value})}/>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Senha</Form.Label>
                                 <InputGroup>
-                                    <Form.Control required type={hide ? "password" : "text"} placeholder="Digite a senha" onChange={(e) => setData({...data, password: e.target.value})}/>
+                                    <Form.Control type={hide ? "password" : "text"} placeholder="Digite a senha" onChange={(e) => setData({...data, password: e.target.value})}/>
                                     <InputGroup.Text onClick={() => setHide(!hide)} style={{cursor: "pointer"}}>
                                         {hide ? <FaEyeSlash /> : <FaEye />}
                                     </InputGroup.Text>
@@ -61,7 +85,7 @@ export const Cadastro = () => {
                             <Form.Group className="mb-3" controlId="formBasicPassword">
                                 <Form.Label>Confirmar senha</Form.Label>
                                 <InputGroup>
-                                    <Form.Control required type={hideConfirm ? "password" : "text"} placeholder="Digite a senha novamente" onChange={(e) => setConfirmPass(e.target.value)}/>
+                                    <Form.Control type={hideConfirm ? "password" : "text"} placeholder="Digite a senha novamente" onChange={(e) => setConfirmPass(e.target.value)}/>
                                     <InputGroup.Text onClick={() => setHideConfirm(!hideConfirm)} style={{cursor: "pointer"}}>
                                         {hideConfirm ? <FaEyeSlash /> : <FaEye />}
                                     </InputGroup.Text>
