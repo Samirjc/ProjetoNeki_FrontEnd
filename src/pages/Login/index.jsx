@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { API } from "../../services/api";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Login = () => {
     const [data, setData] = useState({
@@ -17,6 +19,7 @@ export const Login = () => {
     const [remember, setRemember] = useState(false);
     const {handleSetToken} = useContext(AuthContext);
     const navigate = useNavigate();
+    const notify = () => toast.error("Credenciais inválidas");
 
 
     function handleSubmit(e) {
@@ -31,7 +34,7 @@ export const Login = () => {
             navigate("/home");
             
         }).catch(error => {
-            console.log("deu erro: " + error);
+            notify();
         })
     }
 
@@ -63,6 +66,7 @@ export const Login = () => {
                         </Form>
                     </Col>
                 </Row>
+                <ToastContainer />
             </Container>
     )
 }
