@@ -26,8 +26,8 @@ export const SKillCard = (props) => {
     }
 
     return (
-        <Card style={{ width: '18rem' }}>
-            <Card.Img variant="top" src={props.imgUrl} />
+        <Card style={{ width: '18rem', maxWidth: 300 }}>
+            <Card.Img height={200} variant="top" src={props.imgUrl} />
             <Card.Body>
                 <Card.Title>{props.title}</Card.Title>
                 <Card.Text>

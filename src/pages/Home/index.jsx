@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Col, Container, Dropdown, Modal, Row } from 'react-bootstrap';
+import { Button, CardGroup, Col, Container, Dropdown, Modal, Row } from 'react-bootstrap';
 import { Header } from '../../components/Header';
 import { SKillCard } from '../../components/SKillCard';
 import { AuthContext } from '../../context/AuthContext';
@@ -12,6 +12,7 @@ export const Home = () => {
     const [dropdownLabel, setDropdownLabel] = useState("Escolha uma skill");
     const [selectedSkill, setSelectedSkill] = useState();
     const [userSkills, setUserSkills] = useState([]);
+    const [search, setSearch] = useState("");
 
     const handleClose = () => {
         setShow(false);
@@ -57,10 +58,9 @@ export const Home = () => {
 
     return (
         <>
-            <Header />
+            <Header setSearch={setSearch}/>
 
             <Container className='mt-5'>
-                {console.log(userSkills)}
                 <Row className='mb-5'>
                     <Col>
                         <h1>Minhas Skills</h1>
@@ -70,14 +70,12 @@ export const Home = () => {
                         <Button variant="primary" onClick={handleShow}>Adicionar Skill</Button>
                     </Col>
                 </Row>
-                {console.log(userSkills)}
-                <Row xs={1} md={3}>
-                    {userSkills.map(item => (
-                        <Col>
-                            <SKillCard id={item.id} title={item.skill.name} imgUrl={item.skill.imageUrl} description={item.skill.description} level={item.knowledgeLevel}/>
-                        </Col>
+
+                <CardGroup className='d-flex justify-content-center flex-wrap gap-3'>
+                    {userSkills.filter(item => item.skill.name.toLowerCase().includes(search.toLowerCase())).map(item => (
+                        <SKillCard key={item.id} id={item.id} title={item.skill.name} imgUrl={item.skill.imageUrl} description={item.skill.description} level={item.knowledgeLevel}/>
                     ))}
-                </Row>
+                </CardGroup>
 
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
